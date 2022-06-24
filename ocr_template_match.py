@@ -66,6 +66,8 @@ gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 # apply a tophat (whitehat) morphological operator to find light
 # regions against a dark background (i.e., the credit card numbers)
 tophat = cv2.morphologyEx(gray, cv2.MORPH_TOPHAT, rectKernel)
+blackhat = cv2.morphologyEx(gray, cv2.MORPH_BLACKHAT, rectKernel)
+# tophat = cv2.morphologyEx(gray, cv2.MORPH_BLACKHAT, rectKernel)
 
 # compute the Scharr gradient of the tophat image, then scale
 # the rest back into the range [0, 255]
@@ -86,6 +88,14 @@ thresh = cv2.threshold(gradX, 0, 255,
 # apply a second closing operation to the binary image, again
 # to help close gaps between credit card number regions
 thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, sqKernel)
+
+# cv2.imshow("Gray", gray)
+# cv2.imshow("blackhat", blackhat)
+# cv2.imshow("tophat", tophat)
+# cv2.imshow("Final", thresh)
+# cv2.waitKey(3000)
+
+cv2.imwrite("blackhat.jpg", blackhat)
 
 # find contours in the thresholded image, then initialize the
 # list of digit locations
@@ -174,5 +184,6 @@ for (i, (gX, gY, gW, gH)) in enumerate(locs):
 # display the output credit card information to the screen
 print("Credit Card Type: {}".format(FIRST_NUMBER[output[0]]))
 print("Credit Card #: {}".format("".join(output)))
-cv2.imshow("Image", image)
-cv2.waitKey(0)
+# cv2.imshow("Image", image)
+# cv2.imshow("Image", thresh)
+# cv2.waitKey(5000)
